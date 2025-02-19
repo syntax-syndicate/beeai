@@ -52,7 +52,7 @@
 }
 
 .toBottomButton {
-  &:global(.#{$prefix}--tooltip) {
+  &:global(.cds--tooltip) {
     position: absolute;
     inset-block-start: 0;
     inset-inline-start: 50%;

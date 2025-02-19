@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useId, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useAgents } from '../contexts';
-import { AgentsFiltersParams } from '../contexts/AgentsContext';
+import { AgentsFiltersParams } from '../contexts/agents-context';
 import classes from './AgentsFilters.module.scss';
 
 export function AgentsFilters() {

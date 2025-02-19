@@ -6,6 +6,7 @@ from rich.table import Table
 
 from beeai_cli.api import api_request
 from beeai_cli.async_typer import AsyncTyper, console
+from beeai_cli.utils import parse_env_var
 
 app = AsyncTyper()
 
@@ -32,10 +33,25 @@ async def add(
             "git+https://github.com/my-org/my-repo.git@2.0.0#path=/path/to/beeai-manifest.yaml ..."
         ),
     ),
+    env: list[str] = typer.Option(
+        [],
+        "--env",
+        help="Environment variables to pass to provider",
+        show_default=False,
+    ),
 ) -> None:
     """Call a tool with given input."""
+    env_vars = [parse_env_var(var) for var in env]
+    env_vars = {name: value for name, value in env_vars}
     location = _get_abs_location(location)
-    await api_request("post", "provider", json={"location": location})
+    await api_request(
+        "post",
+        "provider",
+        json={
+            "location": location,
+            **({"env": env_vars} if env_vars else {}),
+        },
+    )
     typer.echo(f"Added provider: {location}")
 
 
@@ -55,7 +71,15 @@ async def list():
     ):
         table.add_row(
             item["id"],
-            render_enum(item["status"], {"ready": "green", "initializing": "yellow", "error": "red"}),
+            render_enum(
+                item["status"],
+                {
+                    "ready": "green",
+                    "initializing": "yellow",
+                    "error": "red",
+                    "unsupported": "orange1",
+                },
+            ),
             item["last_error"] if item["status"] != "ready" else "",
         )
     console.print(table)
@@ -69,3 +93,9 @@ async def remove(
     location = _get_abs_location(location)
     await api_request("post", "provider/delete", json={"location": location})
     console.print(f"Removed provider: {location}")
+
+
+@app.command("sync")
+async def sync(help="Sync external changes to provider registry (if you modified ~/.beeai/providers.yaml manually)"):
+    await api_request("put", "provider/sync")
+    console.print("Providers updated")

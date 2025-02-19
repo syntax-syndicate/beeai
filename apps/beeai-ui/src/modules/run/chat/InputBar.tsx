@@ -1,6 +1,6 @@
 import { TextAreaAutoHeight } from '@/components/TextAreaAutoHeight/TextAreaAutoHeight';
 import { dispatchInputEventOnFormTextarea, submitFormOnEnter } from '@/utils/formUtils';
-import { Send } from '@carbon/icons-react';
+import { Send, StopOutlineFilled } from '@carbon/icons-react';
 import { Button } from '@carbon/react';
 import { memo, useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -16,9 +16,7 @@ export const InputBar = memo(function InputBar({ onMessageSubmit }: Props) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { sendMessage } = useChat();
-
-  // const { mutate } = useSendMessage();
+  const { sendMessage, onCancel } = useChat();
 
   const {
     register,
@@ -85,28 +83,29 @@ export const InputBar = memo(function InputBar({ onMessageSubmit }: Props) {
       />
 
       <div className={classes.buttonContainer}>
-        <Button
-          type="submit"
-          renderIcon={Send}
-          kind="ghost"
-          size="sm"
-          hasIconOnly
-          iconDescription="Send"
-          disabled={isSubmitDisabled}
-        />
-
-        {/* <Button
-                  renderIcon={StopOutlineFilled}
-                  kind="ghost"
-                  size="sm"
-                  hasIconOnly
-                  iconDescription="Cancel"
-                  disabled={status === 'waiting' || status === 'aborting'}
-                  onClick={(e: MouseEvent) => {
-                    // TODO: cancel();
-                    e.preventDefault();
-                  }}
-                /> */}
+        {!isPending ? (
+          <Button
+            type="submit"
+            renderIcon={Send}
+            kind="ghost"
+            size="sm"
+            hasIconOnly
+            iconDescription="Send"
+            disabled={isSubmitDisabled}
+          />
+        ) : (
+          <Button
+            renderIcon={StopOutlineFilled}
+            kind="ghost"
+            size="sm"
+            hasIconOnly
+            iconDescription="Cancel"
+            onClick={(e) => {
+              onCancel();
+              e.preventDefault();
+            }}
+          />
+        )}
       </div>
     </form>
   );

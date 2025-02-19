@@ -1,17 +1,7 @@
-import { ListAgentsRequest } from '@i-am-bee/acp-sdk/types.js';
+import { ListAgentsRequest, Agent as SdkAgent } from '@i-am-bee/acp-sdk/types.js';
+import { Metadata } from '@i-am-bee/beeai-sdk/schemas/metadata';
 
-import { Agent as SdkAgent } from '@i-am-bee/acp-sdk/types.js';
-
-export type Agent = SdkAgent & {
-  title?: string;
-  fullDescription?: string;
-  avgRunTimeSeconds?: number;
-  avgRunTokens?: number;
-  framework?: string;
-  licence?: string;
-  authors?: string[];
-  ui?: 'chat';
-};
+export type Agent = SdkAgent & Metadata;
 
 export type ListAgentsParams = ListAgentsRequest['params'];
 

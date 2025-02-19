@@ -6,7 +6,7 @@ import { Button } from '@carbon/react';
 import pluralize from 'pluralize';
 import { useFormContext } from 'react-hook-form';
 import { useAgents } from '../contexts';
-import { AgentsFiltersParams } from '../contexts/AgentsContext';
+import { AgentsFiltersParams } from '../contexts/agents-context';
 import { useFilteredAgents } from '../hooks/useFilteredAgents';
 import { AgentCard } from './AgentCard';
 import classes from './AgentsList.module.scss';
@@ -59,7 +59,7 @@ export function AgentsList() {
                 <AgentCard agent={agent} />
               </li>
             ))
-          : Array.from({ length: 8 }, (_, idx) => (
+          : Array.from({ length: 3 }, (_, idx) => (
               <li key={idx}>
                 <AgentCard.Skeleton />
               </li>

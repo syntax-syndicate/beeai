@@ -14,10 +14,10 @@ interface Props {
 }
 
 export function AgentCard({ agent }: Props) {
-  const { description } = agent;
+  const { name, description } = agent;
   // const { openModal } = useModal();
 
-  const route = routes.agentDetail(agent.name);
+  const route = routes.agentDetail({ name });
 
   return (
     <article

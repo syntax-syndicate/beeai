@@ -1,0 +1,24 @@
+name: BeeAI Server
+
+on:
+  push:
+    tags:
+      - "beeai-server-v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish-pypi:
+    name: Publish on PyPI
+    if: github.event.base_ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: mise beeai-server:build
+      - uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc
+        with:
+          packages-dir: apps/beeai-server/dist

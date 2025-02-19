@@ -3,67 +3,22 @@ name: ACP Python SDK
 on:
   push:
     tags:
-      - "acp*"
-    branches:
-      - main
-  pull_request:
-    paths:
-      - "packages/acp-python-sdk/**"
+      - "acp-v*"
 
-defaults:
-  run:
-    working-directory: ./packages/acp-python-sdk
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
-  release-build:
-    name: Build distribution
+  publish-pypi:
+    name: Publish on PyPI
+    if: github.event.base_ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/acp')
-    needs: [checks]
+    environment: release
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
-
-      - name: "Set up Python"
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: "./packages/acp-python-sdk/.python-version"
-
-      - name: Install the project
-        run: uv sync --frozen --all-extras --dev
-
-      - name: Build
-        run: uv build
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-dists
-          path: packages/acp-python-sdk/dist/
-
-  checks:
-    uses: ./.github/workflows/acp-python-checks.yml
-
-  pypi-publish:
-    name: Upload release to PyPI
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/acp')
-    environment: release
-    needs:
-      - release-build
-    permissions:
-      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
-
-    steps:
-      - name: Retrieve release distributions
-        uses: actions/download-artifact@v4
-        with:
-          name: release-dists
-          path: packages/acp-python-sdk/dist/
-
-      - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: ./.github/actions/setup
+      - run: mise acp-python-sdk:build
+      - uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc
         with:
           packages-dir: packages/acp-python-sdk/dist

@@ -1,6 +1,6 @@
 import { CopySnippet } from '@/components/CopySnippet/CopySnippet';
 import { Modal } from '@/components/Modal/Modal';
-import { ModalProps } from '@/contexts/Modal/ModalContext';
+import { ModalProps } from '@/contexts/Modal/modal-context';
 import { ArrowUpRight } from '@carbon/icons-react';
 import { Button, ModalBody, ModalHeader } from '@carbon/react';
 import { Agent } from '../api/types';

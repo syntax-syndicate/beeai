@@ -1,12 +1,12 @@
 @use 'styles/common' as *;
 
-.#{$prefix}--text-area,
-.#{$prefix}--text-input {
+.cds--text-area,
+.cds--text-input {
   border: 1px solid $border-subtle;
   border-radius: $spacing-03;
   background-color: $layer;
   &,
-  .#{$prefix}--modal & {
+  .cds--modal & {
     background-color: transparent;
   }
   &:focus-within {
@@ -14,6 +14,6 @@
   }
 }
 
-.#{$prefix}--text-area {
+.cds--text-area {
   padding-block: $spacing-05;
 }

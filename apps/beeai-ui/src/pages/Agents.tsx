@@ -7,7 +7,6 @@ import { AgentsProvider } from '@/modules/agents/contexts/AgentsProvider';
 
 export function Agents() {
   return (
-    <>
       <Container>
         <ViewStack>
           <AgentsProvider>
@@ -17,6 +16,5 @@ export function Agents() {
           </AgentsProvider>
         </ViewStack>
       </Container>
-    </>
   );
 }

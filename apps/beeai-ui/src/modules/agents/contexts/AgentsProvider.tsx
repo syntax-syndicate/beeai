@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useListAgents } from '../api/queries/useListAgents';
-import { AgentsContext, AgentsFiltersParams } from './AgentsContext';
+import { AgentsContext, AgentsFiltersParams } from './agents-context';
 
 export function AgentsProvider({ children }: PropsWithChildren) {
   const agentsQuery = useListAgents();
