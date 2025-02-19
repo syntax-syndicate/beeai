@@ -1,4 +1,4 @@
-import { GitHubRepoParams } from './types';
+import type { GitHubRepoParams } from './types';
 
 export const gitHubRepoKeys = {
   all: () => ['github-repo'] as const,

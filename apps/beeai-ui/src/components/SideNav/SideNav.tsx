@@ -5,9 +5,9 @@ export function SideNav() {
   return (
     <nav>
       <ul className={classes.list}>
-        {NAV_ITEMS.map(({ label, href }, idx) => (
-          <li key={idx}>
-            <a href={href} target="_blank" className={classes.link}>
+        {NAV_ITEMS.map(({ label, href }) => (
+          <li key={href}>
+            <a href={href} target="_blank" rel="noreferrer" className={classes.link}>
               {label}
             </a>
           </li>

@@ -21,6 +21,7 @@ export function GettingStarted() {
                 as="a"
                 href={GET_STARTED_PYTHON_LINK}
                 target="_blank"
+                rel="noreferrer"
                 size="md"
                 kind="tertiary"
                 className={classes.button}
@@ -29,7 +30,7 @@ export function GettingStarted() {
                 <span>Get started with Python</span>
               </Button>
 
-              <a href={GET_STARTED_TYPESCRIPT_LINK} target="_blank" className={classes.link}>
+              <a href={GET_STARTED_TYPESCRIPT_LINK} target="_blank" rel="noreferrer" className={classes.link}>
                 Or get started with Typescript
               </a>
             </div>

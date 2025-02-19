@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchGitHubRepo } from '..';
 import { gitHubRepoKeys } from '../key';
-import { GitHubRepoParams } from '../types';
+import type { GitHubRepoParams } from '../types';
 
 export function useGitHubRepo(params: GitHubRepoParams) {
   const query = useQuery({

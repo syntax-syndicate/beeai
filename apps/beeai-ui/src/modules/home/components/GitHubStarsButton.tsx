@@ -15,6 +15,7 @@ export function GitHubStarsButton() {
       as="a"
       href={`https://github.com/${GITHUB_REPO.owner}/${GITHUB_REPO.repo}`}
       target="_blank"
+      rel="noreferrer"
       size="md"
       className={classes.root}
     >
