@@ -1,15 +1,12 @@
 import { PropsWithChildren } from 'react';
-import { AgentsContext, FilterFormValues } from './AgentsContext';
-import { useListAgents } from '../api/queries/useListAgents';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useListAgents } from '../api/queries/useListAgents';
+import { AgentsContext, AgentsFiltersParams } from './AgentsContext';
 
 export function AgentsProvider({ children }: PropsWithChildren) {
   const agentsQuery = useListAgents();
 
-  const formReturn = useForm<FilterFormValues>({
-    defaultValues: {
-      frameworks: [],
-    },
+  const formReturn = useForm<AgentsFiltersParams>({
     mode: 'onChange',
   });
 
