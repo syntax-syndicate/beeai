@@ -1,0 +1,21 @@
+.container {
+  position: relative;
+  display: flex;
+  height: 72px;
+}
+
+.placeholder {
+  height: 209px !important;
+  margin-left: -41px;
+  margin-top: -68px;
+
+  .loaded & {
+    visibility: hidden;
+  }
+}
+
+.animation {
+  position: absolute;
+  margin-left: -27px;
+  margin-top: -68px;
+}

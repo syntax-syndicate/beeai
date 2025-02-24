@@ -1,10 +1,10 @@
 import { Container } from '@/components/layouts/Container';
-import LogoBeeAI from '@/svgs/LogoBeeAI.svg';
 import { GET_STARTED_PYTHON_LINK, GET_STARTED_TYPESCRIPT_LINK } from '@/utils/constants';
 import { ArrowUpRight } from '@carbon/icons-react';
 import { Button } from '@carbon/react';
-import classes from './GettingStarted.module.scss';
+import LogoBeeAI from './LogoBeeAI';
 import { GitHubStarsButton } from './GitHubStarsButton';
+import classes from './GettingStarted.module.scss';
 
 export function GettingStarted() {
   return (
