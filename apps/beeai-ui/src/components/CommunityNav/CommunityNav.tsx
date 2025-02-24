@@ -10,7 +10,7 @@ export function CommunityNav() {
         {NAV_ITEMS.map(({ label, href, Icon }) => (
           <li key={label} className={classes.item}>
             <a href={href} target="_blank" rel="noreferrer" aria-label={label} className={classes.link}>
-              <Icon />
+              <Icon width={20} height={20} />
             </a>
           </li>
         ))}
