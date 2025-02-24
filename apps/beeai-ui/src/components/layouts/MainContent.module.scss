@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import './styles/style.scss';
-import { App } from './App';
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+.root {
+  @include scrollbar();
+  block-size: 100%;
+  inline-size: 100%;
+  padding-block: $spacing-09;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  grid-area: main;
+  scroll-behavior: smooth;
+  view-transition-name: main;
+}

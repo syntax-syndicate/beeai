@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import './styles/style.scss';
-import { App } from './App';
+import { AddAgentButton } from './components/AddAgentButton';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+export function ComposeIndex() {
+  return (
+    <div>
+      <h1>Compose</h1>
+      <AddAgentButton />
+    </div>
+  );
+}

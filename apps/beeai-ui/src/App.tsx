@@ -28,6 +28,7 @@ import { Home } from './pages/Home';
 import { NotFound } from './pages/NotFound';
 import { AgentRunPage } from './pages/run/AgentRunPage';
 import { routeDefinitions } from './utils/router';
+import { ComposePage } from './pages/ComposePage';
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ export function App() {
                     <Route path={routeDefinitions.agents()} element={<Agents />} />
                     <Route path={routeDefinitions.agentDetail()} element={<Agent />} />
                     <Route path={routeDefinitions.agentRun()} element={<AgentRunPage />} />
+                    <Route path={routeDefinitions.compose()} element={<ComposePage />} />
 
                     <Route path="*" element={<NotFound />} />
                   </Route>

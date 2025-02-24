@@ -15,4 +15,33 @@
  */
 
 .root {
+  display: flex;
+  flex-direction: column;
+  padding-inline: $spacing-05;
+  transition: background-color $duration-fast-01 ease-out;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $background-hover;
+  }
+
+  &:last-child .content {
+    border-block-end: none;
+  }
+}
+
+.content {
+  padding-block: $spacing-05;
+  border-block-end: 1px solid $border-subtle;
+}
+
+.name {
+  display: block;
+  margin-block-end: $spacing-04;
+}
+
+.description {
+  @include type-style(label-01);
+  color: $text-secondary;
+  margin-block-end: $spacing-03;
 }

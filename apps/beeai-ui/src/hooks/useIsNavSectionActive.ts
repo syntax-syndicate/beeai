@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import './styles/style.scss';
-import { App } from './App';
+import { NavSectionName } from '#utils/router.ts';
+import { useCallback } from 'react';
+import { useLocation } from 'react-router';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+export function useIsNavSectionActive() {
+  const { pathname } = useLocation();
+  const section = pathname.split('/').at(1);
+
+  console.log({ section });
+
+  return useCallback((name: NavSectionName) => name === section, [section]);
+}

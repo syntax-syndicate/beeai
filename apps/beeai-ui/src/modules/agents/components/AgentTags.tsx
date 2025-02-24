@@ -19,24 +19,35 @@ import Bee from '#svgs/Bee.svg';
 import { isNotNull } from '#utils/helpers.ts';
 import { Tag } from '@carbon/react';
 import { Agent } from '../api/types';
+import { ComponentProps } from 'react';
+
+type TagSize = ComponentProps<typeof Tag>['size'];
 
 interface Props {
   agent: Agent;
   className?: string;
+  size?: TagSize;
 }
 
-export function AgentTags({ agent, className }: Props) {
+export function AgentTags({ agent, className, size = 'md' }: Props) {
   const { framework } = agent;
 
-  return <TagsList tags={[framework ? <AgentTag name={framework} /> : null].filter(isNotNull)} className={className} />;
+  return (
+    <TagsList
+      tags={[framework ? <AgentTag name={framework} size={size} /> : null].filter(isNotNull)}
+      className={className}
+    />
+  );
 }
 
-function AgentTag({ name }: { name: string }) {
+function AgentTag({ name, size }: { name: string; size?: TagSize }) {
   return name === 'BeeAI' ? (
-    <Tag type="green" renderIcon={Bee}>
+    <Tag type="green" renderIcon={Bee} size={size}>
       {name}
     </Tag>
   ) : (
-    <Tag type="cool-gray">{name}</Tag>
+    <Tag type="cool-gray" size={size}>
+      {name}
+    </Tag>
   );
 }

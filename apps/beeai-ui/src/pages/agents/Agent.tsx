@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { MainContent } from '#components/layouts/MainContent.tsx';
 import { AgentDetail } from '#modules/agents/detail/AgentDetail.tsx';
 import { routes } from '#utils/router.ts';
 import { useNavigate, useParams } from 'react-router';
@@ -31,5 +32,9 @@ export function Agent() {
     return null;
   }
 
-  return <AgentDetail name={agentName} />;
+  return (
+    <MainContent>
+      <AgentDetail name={agentName} />
+    </MainContent>
+  );
 }
