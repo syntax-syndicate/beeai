@@ -33,6 +33,12 @@
   &:global(.cds--btn) {
     inline-size: 100%;
     border-color: $text-dark;
+
+    &:hover,
+    &:focus:hover {
+      color: $white;
+      background: $gray-100;
+    }
   }
 }
 
