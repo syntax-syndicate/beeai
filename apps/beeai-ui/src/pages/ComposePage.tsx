@@ -14,27 +14,16 @@
  * limitations under the License.
  */
 
-import { Container } from '#components/layouts/Container.tsx';
-import { MainContent } from '#components/layouts/MainContent.tsx';
-import { ViewStack } from '#components/ViewStack/ViewStack.tsx';
 import { AgentsProvider } from '#modules/agents/contexts/AgentsProvider.tsx';
 import { ComposeIndex } from '#modules/compose/ComposeIndex.tsx';
-import { useSearchParams } from 'react-router';
+import { CompositionProvider } from '#modules/compose/contexts/CompositionProvider.tsx';
 
 export function ComposePage() {
-  const [searchParams] = useSearchParams();
-
-  return searchParams.get('agents') ? (
-    <div>xxx</div>
-  ) : (
-    <MainContent>
-      <Container>
-        <ViewStack>
-          <AgentsProvider>
-            <ComposeIndex />
-          </AgentsProvider>
-        </ViewStack>
-      </Container>
-    </MainContent>
+  return (
+    <AgentsProvider>
+      <CompositionProvider>
+        <ComposeIndex />
+      </CompositionProvider>
+    </AgentsProvider>
   );
 }

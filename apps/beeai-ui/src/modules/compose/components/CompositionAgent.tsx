@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-import clsx from 'clsx';
-import { PropsWithChildren } from 'react';
-import classes from './AppHeader.module.scss';
-import { Container } from './Container';
+import { Agent } from '#modules/agents/api/types.ts';
+import { getAgentTitle } from '#modules/agents/utils.ts';
+import { MarkdownContent } from '#components/MarkdownContent/MarkdownContent.tsx';
+import classes from './CompositionAgent.module.scss';
 
 interface Props {
-  className?: string;
+  agent: Agent;
 }
+export function CompositionAgent({ agent }: Props) {
+  const { description } = agent;
 
-export function AppHeader({ className, children }: PropsWithChildren<Props>) {
   return (
-    <header className={clsx(classes.root, className)}>
-      <Container size="mdmd">
-        <div className={classes.holder}>{children}</div>
-      </Container>
-    </header>
+    <div className={classes.root}>
+      <span className={classes.name}>{getAgentTitle(agent)}</span>
+      {description && <MarkdownContent className={classes.description}>{description}</MarkdownContent>}
+    </div>
   );
 }

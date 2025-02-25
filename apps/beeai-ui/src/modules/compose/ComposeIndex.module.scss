@@ -14,38 +14,18 @@
  * limitations under the License.
  */
 
-@use 'common' as *;
-@use '@carbon/styles/scss/reset';
-@use '@carbon/styles/scss/fonts';
-@use '@carbon/styles/scss/grid';
-// @use '@carbon/styles/scss/layer';
-// @use '@carbon/styles/scss/layout';
-// @use '@carbon/styles/scss/zone';
-
-@use 'components';
-
-:root {
-  @include theme($light);
+.main {
+  background-color: $layer-02;
 }
 
-// @media (prefers-color-scheme: dark) {
-//   :root {
-//     @include theme($dark);
-//   }
-// }
+.splitContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  inline-size: 100%;
 
-body {
-  overflow: hidden;
-}
-
-a {
-  &:focus-visible {
-    @include focus-outline('outline');
-    outline-offset: 0;
-    border-radius: $spacing-02;
+  > div {
+    padding-block: $spacing-09;
+    @include scrollbar();
+    overflow-y: auto;
   }
-}
-
-h1 {
-  @include h1();
 }

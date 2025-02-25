@@ -35,4 +35,10 @@
   &.xlg {
     max-inline-size: get-value($grid-breakpoints, 'xlg.width');
   }
+  &.mdmd {
+    max-inline-size: calc(2 * (rem(768px) + 2 * $grid-margin + $spacing-05));
+  }
+  &.lglg {
+    max-inline-size: calc(2 * (rem(1088px) + 2 * $grid-margin));
+  }
 }

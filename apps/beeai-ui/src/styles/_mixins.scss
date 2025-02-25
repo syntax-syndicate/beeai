@@ -16,6 +16,8 @@
 
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/utilities/convert' as *;
+@use 'sass:math';
 
 @mixin line-clamp($lines: 1) {
   overflow: hidden;
@@ -40,6 +42,7 @@
 @mixin scrollbar() {
   scrollbar-width: thin;
   scrollbar-color: $layer-03 transparent;
+  scrollbar-gutter: stable;
   &::-webkit-scrollbar {
     inline-size: $spacing-05;
     block-size: $spacing-05;
@@ -54,4 +57,11 @@
     background: $layer-03;
     background-clip: padding-box;
   }
+}
+
+@mixin h1() {
+  font-size: rem(24px);
+  line-height: math.div(31.2, 24);
+  font-weight: 400;
+  margin-block-end: $spacing-06;
 }

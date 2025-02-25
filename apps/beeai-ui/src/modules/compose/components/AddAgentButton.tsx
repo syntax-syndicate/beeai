@@ -21,17 +21,18 @@ import { RefObject, useId, useMemo, useRef, useState } from 'react';
 import { AgentCard } from '#modules/agents/components/AgentCard.tsx';
 import { AgentListOption } from './AgentListOption';
 import { useOnClickOutside } from 'usehooks-ts';
-import { useSearchParams } from 'react-router';
+import { useComposition } from '../contexts';
 
 export function AddAgentButton() {
   const id = useId();
   const [expanded, setExpanded] = useState(false);
-  const [, setSearchParams] = useSearchParams();
+
   const selectorRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(selectorRef as RefObject<HTMLElement>, () => {
     setExpanded(false);
   });
 
+  const { setAgents } = useComposition();
   const {
     agentsQuery: { data, isPending },
   } = useAgents();
@@ -59,10 +60,8 @@ export function AddAgentButton() {
                 agent={agent}
                 key={agent.name}
                 onClick={() => {
-                  setSearchParams((searchParams) => {
-                    searchParams.set('agents', agent.name);
-                    return searchParams;
-                  });
+                  setAgents((agents) => [...agents, agent]);
+                  setExpanded(false);
                 }}
               />
             ))

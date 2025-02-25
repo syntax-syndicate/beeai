@@ -14,38 +14,12 @@
  * limitations under the License.
  */
 
-@use 'common' as *;
-@use '@carbon/styles/scss/reset';
-@use '@carbon/styles/scss/fonts';
-@use '@carbon/styles/scss/grid';
-// @use '@carbon/styles/scss/layer';
-// @use '@carbon/styles/scss/layout';
-// @use '@carbon/styles/scss/zone';
+import { Agent } from '#modules/agents/api/types.ts';
+import { createContext } from 'react';
 
-@use 'components';
+export const CompositionContext = createContext<CompositionContextValue | null>(null);
 
-:root {
-  @include theme($light);
-}
-
-// @media (prefers-color-scheme: dark) {
-//   :root {
-//     @include theme($dark);
-//   }
-// }
-
-body {
-  overflow: hidden;
-}
-
-a {
-  &:focus-visible {
-    @include focus-outline('outline');
-    outline-offset: 0;
-    border-radius: $spacing-02;
-  }
-}
-
-h1 {
-  @include h1();
+interface CompositionContextValue {
+  agents: Agent[];
+  setAgents: (updater: (agent: Agent[]) => Agent[]) => void;
 }

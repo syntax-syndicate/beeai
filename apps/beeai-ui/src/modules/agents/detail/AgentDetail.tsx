@@ -29,7 +29,7 @@ import { AgentMetadata } from '../components/AgentMetadata';
 import { AgentTags } from '../components/AgentTags';
 import { getAgentTitle } from '../utils';
 import classes from './AgentDetail.module.scss';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { moderate01 } from '@carbon/motion';
 import { spacing } from '@carbon/layout';
 import { TransitionLink } from '#components/TransitionLink/TransitionLink.tsx';
@@ -49,53 +49,51 @@ export function AgentDetail({ name }: Props) {
       {!isPending ? (
         agent ? (
           <div className={classes.root}>
-            <AnimatePresence>
-              <motion.h1 {...fadeInPropsWithMarginShift({ start: { from: spacing[4] } })} className={classes.name}>
-                {getAgentTitle(agent)}
-              </motion.h1>
+            <motion.h1 {...fadeInPropsWithMarginShift({ start: { from: spacing[4] } })} className={classes.name}>
+              {getAgentTitle(agent)}
+            </motion.h1>
 
-              <motion.div {...fadeInPropsWithMarginShift({ start: { from: spacing[3] } })}>
-                <AgentMetadata agent={agent} className={classes.metadata} />
-                {agent.description && (
-                  <MarkdownContent className={classes.description}>{agent.description}</MarkdownContent>
-                )}
-                <AgentTags agent={agent} className={classes.tags} />
-              </motion.div>
-
-              <motion.div
-                {...fadeInPropsWithMarginShift({ start: { from: spacing[6], to: spacing[5] } })}
-                className={classes.buttons}
-              >
-                {agent.ui === 'chat' && (
-                  <Button
-                    kind="primary"
-                    renderIcon={ArrowUpRight}
-                    size="md"
-                    className={classes.tryButton}
-                    to={routes.agentRun({ name })}
-                    as={TransitionLink}
-                  >
-                    Try this agent
-                  </Button>
-                )}
-
-                <CopySnippet snippet={runCommand} className={classes.copySnippet} />
-              </motion.div>
-
-              {agent.fullDescription && (
-                <>
-                  <motion.hr
-                    {...fadeInPropsWithMarginShift({
-                      start: { from: spacing[9], to: spacing[8] },
-                      end: { from: spacing[9], to: spacing[8] },
-                    })}
-                    className={classes.divider}
-                  />
-
-                  <MarkdownContent>{agent.fullDescription}</MarkdownContent>
-                </>
+            <motion.div {...fadeInPropsWithMarginShift({ start: { from: spacing[3] } })}>
+              <AgentMetadata agent={agent} className={classes.metadata} />
+              {agent.description && (
+                <MarkdownContent className={classes.description}>{agent.description}</MarkdownContent>
               )}
-            </AnimatePresence>
+              <AgentTags agent={agent} className={classes.tags} />
+            </motion.div>
+
+            <motion.div
+              {...fadeInPropsWithMarginShift({ start: { from: spacing[6], to: spacing[5] } })}
+              className={classes.buttons}
+            >
+              {agent.ui === 'chat' && (
+                <Button
+                  kind="primary"
+                  renderIcon={ArrowUpRight}
+                  size="md"
+                  className={classes.tryButton}
+                  to={routes.agentRun({ name })}
+                  as={TransitionLink}
+                >
+                  Try this agent
+                </Button>
+              )}
+
+              <CopySnippet snippet={runCommand} className={classes.copySnippet} />
+            </motion.div>
+
+            {agent.fullDescription && (
+              <>
+                <motion.hr
+                  {...fadeInPropsWithMarginShift({
+                    start: { from: spacing[9], to: spacing[8] },
+                    end: { from: spacing[9], to: spacing[8] },
+                  })}
+                  className={classes.divider}
+                />
+
+                <MarkdownContent>{agent.fullDescription}</MarkdownContent>
+              </>
+            )}
           </div>
         ) : (
           <ErrorMessage

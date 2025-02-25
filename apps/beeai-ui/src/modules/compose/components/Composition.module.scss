@@ -15,45 +15,18 @@
  */
 
 .root {
-  display: grid;
-  block-size: 100dvh;
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas:
-    'header'
-    'main'
-    'footer';
-}
-
-.header {
-  grid-area: header;
-}
-
-.main {
-  grid-area: main;
+  background-color: $layer-02;
   display: flex;
-  overflow: hidden;
-  view-transition-name: main;
+  justify-content: flex-end;
+
+  > div {
+    margin-inline: 0;
+    padding-inline-end: $spacing-06;
+  }
 }
 
-.footer {
-  grid-area: footer;
-}
-
-::view-transition-old(main),
-::view-transition-new(main) {
-  animation-duration: $duration-moderate-01;
-}
-
-::view-transition-old(main) {
-  opacity: 1;
-}
-::view-transition-old(main).view-transition-leaving {
-  opacity: 0;
-}
-
-::view-transition-new(main) {
-  opacity: 0;
-}
-::view-transition-new(main).view-transition-entering {
-  opacity: 1;
+.agents {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-06;
 }

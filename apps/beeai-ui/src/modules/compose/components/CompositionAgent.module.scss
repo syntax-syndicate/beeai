@@ -15,45 +15,21 @@
  */
 
 .root {
-  display: grid;
-  block-size: 100dvh;
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas:
-    'header'
-    'main'
-    'footer';
-}
-
-.header {
-  grid-area: header;
-}
-
-.main {
-  grid-area: main;
   display: flex;
-  overflow: hidden;
-  view-transition-name: main;
+  flex-direction: column;
+  background-color: $background;
+  border-radius: $border-radius;
+  padding: $spacing-05;
+  box-shadow: $box-shadow;
 }
 
-.footer {
-  grid-area: footer;
+.name {
+  display: block;
+  margin-block-end: $spacing-04;
 }
 
-::view-transition-old(main),
-::view-transition-new(main) {
-  animation-duration: $duration-moderate-01;
-}
-
-::view-transition-old(main) {
-  opacity: 1;
-}
-::view-transition-old(main).view-transition-leaving {
-  opacity: 0;
-}
-
-::view-transition-new(main) {
-  opacity: 0;
-}
-::view-transition-new(main).view-transition-entering {
-  opacity: 1;
+.description {
+  @include type-style(label-01);
+  color: $text-secondary;
+  margin-block-end: $spacing-03;
 }

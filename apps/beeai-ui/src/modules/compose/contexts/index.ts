@@ -14,38 +14,15 @@
  * limitations under the License.
  */
 
-@use 'common' as *;
-@use '@carbon/styles/scss/reset';
-@use '@carbon/styles/scss/fonts';
-@use '@carbon/styles/scss/grid';
-// @use '@carbon/styles/scss/layer';
-// @use '@carbon/styles/scss/layout';
-// @use '@carbon/styles/scss/zone';
+import { useContext } from 'react';
+import { CompositionContext } from './composition-context';
 
-@use 'components';
+export function useComposition() {
+  const context = useContext(CompositionContext);
 
-:root {
-  @include theme($light);
-}
-
-// @media (prefers-color-scheme: dark) {
-//   :root {
-//     @include theme($dark);
-//   }
-// }
-
-body {
-  overflow: hidden;
-}
-
-a {
-  &:focus-visible {
-    @include focus-outline('outline');
-    outline-offset: 0;
-    border-radius: $spacing-02;
+  if (!context) {
+    throw new Error('useComposition must be used within CompositionProvider');
   }
-}
 
-h1 {
-  @include h1();
+  return context;
 }

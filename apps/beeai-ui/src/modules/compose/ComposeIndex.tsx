@@ -14,13 +14,32 @@
  * limitations under the License.
  */
 
-import { AddAgentButton } from './components/AddAgentButton';
+import { useSearchParams } from 'react-router';
+import { MainContent } from '#components/layouts/MainContent.tsx';
+import { Container } from '#components/layouts/Container.tsx';
+import { ViewStack } from '#components/ViewStack/ViewStack.tsx';
+import { AgentsProvider } from '#modules/agents/contexts/AgentsProvider.tsx';
+import classes from './ComposeIndex.module.scss';
+import { Composition } from './components/Composition';
+import { CompositionTest } from './components/CompositionTest';
 
 export function ComposeIndex() {
-  return (
-    <div>
-      <h1>Compose</h1>
-      <AddAgentButton />
+  const [searchParams] = useSearchParams();
+
+  return searchParams.get('agents') ? (
+    <div className={classes.splitContainer}>
+      <Composition />
+      <CompositionTest />
     </div>
+  ) : (
+    <MainContent className={classes.main}>
+      <Container>
+        <ViewStack>
+          <AgentsProvider>
+            <Composition />
+          </AgentsProvider>
+        </ViewStack>
+      </Container>
+    </MainContent>
   );
 }
