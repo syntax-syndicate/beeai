@@ -1,9 +1,6 @@
 import { z } from "zod";
-import { ChatModel } from "bee-agent-framework/backend/chat";
-import {
-  SystemMessage,
-  UserMessage,
-} from "bee-agent-framework/backend/message";
+import { ChatModel } from "beeai-framework/backend/chat";
+import { SystemMessage, UserMessage } from "beeai-framework/backend/message";
 import { Metadata } from "@i-am-bee/beeai-sdk/schemas/metadata";
 import {
   promptInputSchema,
@@ -11,12 +8,13 @@ import {
 } from "@i-am-bee/beeai-sdk/schemas/prompt";
 import { Client as ACPClient } from "@i-am-bee/acp-sdk/client/index.js";
 import { SSEClientTransport } from "@i-am-bee/acp-sdk/client/sse.js";
-import { CHAT_MODEL } from "./config.js";
+import { CHAT_MODEL } from "../config.js";
 
 const inputSchema = promptInputSchema.extend({
   documents: z.array(z.string()).default([]).optional(),
   agents: z.array(z.string()).default([]).optional(),
 });
+type Input = z.infer<typeof inputSchema>;
 const outputSchema = promptOutputSchema;
 
 const criteria = [
@@ -117,7 +115,7 @@ const run = async (
   {
     params,
   }: {
-    params: { input: z.infer<typeof inputSchema> };
+    params: { input: Input };
   },
   { signal }: { signal?: AbortSignal }
 ) => {
@@ -163,27 +161,28 @@ const run = async (
   };
 };
 
-const exampleInput1 = `{
-  "prompt": "How does quantum computing impact cryptography?",
-  "documents": [
-    "Quantum computing poses a significant threat to classical encryption methods due to its ability to solve complex mathematical problems exponentially faster...",
-    "Current cryptographic standards, such as RSA, rely on integer factorization, which quantum algorithms like Shor’s algorithm can efficiently break...",
-    "Quantum computing will not significantly impact modern cryptography for at least another 50 years..."
-  ],
-  "agents": ["gpt-researcher", "ollama-deep-researcher"]
-}`;
+const exampleInput1: Input = {
+  prompt:
+    "Generate a concise summary of the history of artificial intelligence.",
+  agents: ["gpt-researcher", "ollama-deep-researcher"],
+};
 
 const exampleOutput1 = `{
-  "text": "Quantum computing poses a significant threat to classical encryption methods due to its ability to solve complex mathematical problems exponentially faster..."
+  "text": "Artificial Intelligence has evolved from early symbolic reasoning systems in the 1950s to deep learning-powered applications today, transforming industries such as healthcare, finance, and autonomous systems."
 }`;
 
-const exampleInput2 = `{
-  "prompt": "Generate a concise summary of the history of artificial intelligence.",
-  "agents": ["gpt-researcher", "ollama-deep-researcher"]
-}`;
+const exampleInput2: Input = {
+  prompt: "How does quantum computing impact cryptography?",
+  documents: [
+    "Quantum computing poses a significant threat to classical encryption methods due to its ability to solve complex mathematical problems exponentially faster...",
+    "Current cryptographic standards, such as RSA, rely on integer factorization, which quantum algorithms like Shor’s algorithm can efficiently break...",
+    "Quantum computing will not significantly impact modern cryptography for at least another 50 years...",
+  ],
+  agents: ["gpt-researcher", "ollama-deep-researcher"],
+};
 
 const exampleOutput2 = `{
-  "text": "Artificial Intelligence has evolved from early symbolic reasoning systems in the 1950s to deep learning-powered applications today, transforming industries such as healthcare, finance, and autonomous systems."
+  "text": "Quantum computing poses a significant threat to classical encryption methods due to its ability to solve complex mathematical problems exponentially faster..."
 }`;
 
 export const agent = {
@@ -194,8 +193,8 @@ export const agent = {
   outputSchema,
   run,
   metadata: {
-    title: "Content Judge",
-    fullDescription: `The Content Judge Agent evaluates multiple documents and agent-generated content based on four key criteria - correctness, depth & coverage, clarity & structure, and relevance. It assigns a numerical score (0-1) to each document for each criterion, using a weighted average to determine the highest-scoring document. This ensures that the most accurate, comprehensive, well-structured, and relevant document is selected.
+    exampleInput: exampleInput1,
+    fullDescription: `The \`content-judge\` Agent evaluates multiple documents and agent-generated content based on four key criteria - correctness, depth & coverage, clarity & structure, and relevance. It assigns a numerical score (0-1) to each document for each criterion, using a weighted average to determine the highest-scoring document. This ensures that the most accurate, comprehensive, well-structured, and relevant document is selected.
 
 ## How It Works
 
@@ -207,7 +206,7 @@ The agent processes all provided text inputs and evaluates them based on the def
 
 ### Input Parameters
 
-The Content Judge operates based on the following input parameters:
+The agent operates based on the following input parameters:
 - **prompt** (string) – The research prompt or query guiding document selection.
 - **documents** (array of strings, optional) – A list of pre-provided documents for evaluation.
 - **agents** (array of strings, optional) – A list of agents to query for additional content.
@@ -231,40 +230,16 @@ The agent utilizes the Llama 3.1 8B model to perform structured evaluations and 
 
 ## Example usage
 
-### Example 1: Research Validation
+### Example 1: AI Content Refinement
 
 #### Input:
 \`\`\`json
-${exampleInput1}
+${JSON.stringify(exampleInput1, null, 2)}
 \`\`\`
 
 #### CLI:
 \`\`\`bash
-beeai agent run content-judge '${exampleInput1}'
-\`\`\`
-
-#### Processing Steps:
-
-1. Queries the agents for additional insights on quantum computing and cryptography.
-2. Evaluates all gathered documents using the four scoring criteria.
-3. Assigns scores and selects the document that best aligns with the research prompt.
-
-### Output:
-
-\`\`\`json
-${exampleOutput1}
-\`\`\`
-
-### Example 2: AI Content Refinement
-
-#### Input:
-\`\`\`json
-${exampleInput2}
-\`\`\`
-
-#### CLI:
-\`\`\`bash
-beeai agent run content-judge '${exampleInput2}'
+beeai run content-judge '${JSON.stringify(exampleInput1, null, 2)}'
 \`\`\`
 
 #### Processing Steps:
@@ -276,11 +251,38 @@ beeai agent run content-judge '${exampleInput2}'
 ### Output:
 
 \`\`\`json
+${exampleOutput1}
+\`\`\`
+
+### Example 2: Research Validation
+
+#### Input:
+\`\`\`json
+${JSON.stringify(exampleInput2, null, 2)}
+\`\`\`
+
+#### CLI:
+\`\`\`bash
+beeai run content-judge '${JSON.stringify(exampleInput2, null, 2)}'
+\`\`\`
+
+#### Processing Steps:
+
+1. Queries the agents for additional insights on quantum computing and cryptography.
+2. Evaluates all gathered documents using the four scoring criteria.
+3. Assigns scores and selects the document that best aligns with the research prompt.
+
+### Output:
+
+\`\`\`json
 ${exampleOutput2}
 \`\`\`
 `,
     framework: "BeeAI",
-    licence: "Apache 2.0",
+    license: "Apache 2.0",
+    languages: ["TypeScript"],
+    githubUrl:
+      "https://github.com/i-am-bee/beeai/blob/main/agents/official/beeai-framework/src/content-judge",
     avgRunTimeSeconds: 22,
     avgRunTokens: 1229,
   } satisfies Metadata,

@@ -34,9 +34,10 @@ async def register_agent() -> int:
         input=PromptInput,
         output=Output,
         **Metadata(
-            title="GPT Researcher",
             framework="Custom",
-            licence="Apache 2.0",
+            license="Apache 2.0",
+            languages=["Python"],
+            githubUrl="https://github.com/i-am-bee/beeai/tree/main/agents/community/gpt-researcher-agent/gpt_researcher_agent",
             avgRunTimeSeconds=2.1,
             avgRunTokens=111,
             fullDescription="""
