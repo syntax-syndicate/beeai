@@ -22,6 +22,7 @@ import { AgentTags } from '#modules/agents/components/AgentTags.tsx';
 import { SkeletonText } from '@carbon/react';
 import { TagsList } from '#components/TagsList/TagsList.tsx';
 import { MouseEvent } from 'react';
+import clsx from 'clsx';
 
 interface Props {
   agent: Agent;
@@ -44,7 +45,7 @@ export function AgentListOption({ agent, onClick }: Props) {
 
 AgentListOption.Skeleton = function AgentListOptionSkeleton() {
   return (
-    <li className={classes.root}>
+    <li className={clsx(classes.root, classes.skeleton)}>
       <SkeletonText className={classes.name} width="50%" />
       <SkeletonText className={classes.description} paragraph lineCount={2} />
       <TagsList.Skeleton length={2} />

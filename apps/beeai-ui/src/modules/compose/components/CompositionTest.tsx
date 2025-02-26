@@ -20,18 +20,20 @@ import { submitFormOnEnter } from '#utils/formUtils.ts';
 import classes from './CompositionTest.module.scss';
 import { Button } from '@carbon/react';
 import { ArrowRight, NewTab, StopOutlineFilled } from '@carbon/icons-react';
-import { useRunAgent } from '#modules/run/api/mutations/useRunAgent.tsx';
-import { PromptInput } from '@i-am-bee/beeai-sdk/schemas/prompt';
-import { PromptNotifications, promptNotificationsSchema, PromptResult } from '#modules/run/api/types.ts';
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { useComposition } from '../contexts';
+import { useEffect, useRef } from 'react';
+import { useCompose } from '../contexts';
 import { MarkdownContent } from '#components/MarkdownContent/MarkdownContent.tsx';
 import { Container } from '#components/layouts/Container.tsx';
 
 export function CompositionTest() {
-  const { agents } = useComposition();
-  const [result, setResult] = useState<string>('');
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const { result, onSubmit, onCancel, onClear } = useCompose();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [result]);
 
   const {
     register,
@@ -42,48 +44,13 @@ export function CompositionTest() {
     mode: 'onChange',
   });
 
-  // TODO: replace with composition agent
-  const agent = useMemo(() => agents.at(0), [agents]);
-
-  const { runAgent } = useRunAgent<PromptInput, PromptNotifications>({
-    agent: agent!,
-    notifications: {
-      schema: promptNotificationsSchema,
-      handler: (notification) => {
-        setResult((result) => result + notification.params.delta.text);
-      },
-    },
-  });
-
-  const send = useCallback(
-    async (input: string) => {
-      try {
-        const abortController = new AbortController();
-        abortControllerRef.current = abortController;
-
-        setResult('');
-
-        const response = (await runAgent({
-          input: { prompt: input },
-          abortController,
-        })) as PromptResult;
-
-        setResult(response.output.text);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [runAgent],
-  );
-
   const input = watch('input');
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} ref={containerRef}>
       <Container>
         {!result ? (
           <>
-            {' '}
             <h2>Test</h2>
             <form
               className={classes.form}
@@ -92,7 +59,7 @@ export function CompositionTest() {
                 if (!isValid) return;
 
                 handleSubmit(async ({ input }) => {
-                  await send(input);
+                  await onSubmit(input);
                 })();
               }}
             >
@@ -125,7 +92,7 @@ export function CompositionTest() {
                     size="md"
                     iconDescription="Cancel"
                     onClick={(e) => {
-                      // onCancel();
+                      onCancel();
                       e.preventDefault();
                     }}
                   >
@@ -141,14 +108,14 @@ export function CompositionTest() {
               Input: <strong>{input}</strong>
             </h2>
             <div>
-              <Button renderIcon={NewTab} size="md" kind="tertiary">
+              <Button renderIcon={NewTab} size="md" kind="tertiary" onClick={() => onClear()}>
                 New test
               </Button>
             </div>
           </div>
         )}
 
-        <div>
+        <div className={classes.result}>
           <MarkdownContent>{result}</MarkdownContent>
         </div>
       </Container>

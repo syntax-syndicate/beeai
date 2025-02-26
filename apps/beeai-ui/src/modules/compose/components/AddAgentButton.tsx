@@ -18,10 +18,10 @@ import { Button } from '@carbon/react';
 import classes from './AddAgentButton.module.scss';
 import { useAgents } from '#modules/agents/contexts/index.ts';
 import { RefObject, useId, useMemo, useRef, useState } from 'react';
-import { AgentCard } from '#modules/agents/components/AgentCard.tsx';
 import { AgentListOption } from './AgentListOption';
 import { useOnClickOutside } from 'usehooks-ts';
-import { useComposition } from '../contexts';
+import { useCompose } from '../contexts';
+import { messageInputSchema } from '@i-am-bee/beeai-sdk/schemas/message';
 
 export function AddAgentButton() {
   const id = useId();
@@ -32,12 +32,23 @@ export function AddAgentButton() {
     setExpanded(false);
   });
 
-  const { setAgents } = useComposition();
+  const { setAgents } = useCompose();
   const {
     agentsQuery: { data, isPending },
   } = useAgents();
 
   const availableAgents = useMemo(() => {
+    console.log({ data });
+
+    data?.forEach((agent) => {
+      try {
+        messageInputSchema.parse(agent.inputSchema);
+        console.log(`${agent.name} implements messageInputSchema`);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
     return data;
   }, [data]);
 
@@ -60,17 +71,19 @@ export function AddAgentButton() {
                 agent={agent}
                 key={agent.name}
                 onClick={() => {
-                  setAgents((agents) => [...agents, agent]);
+                  setAgents((agents) => [...agents, { data: agent }]);
                   setExpanded(false);
                 }}
               />
             ))
-          : Array.from({ length: 3 }, (_, idx) => (
+          : Array.from({ length: AGENTS_SKELETON_COUNT }, (_, idx) => (
               <li key={idx}>
-                <AgentCard.Skeleton />
+                <AgentListOption.Skeleton />
               </li>
             ))}
       </ul>
     </div>
   );
 }
+
+const AGENTS_SKELETON_COUNT = 4;

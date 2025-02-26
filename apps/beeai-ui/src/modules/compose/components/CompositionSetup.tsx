@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-import classes from './Composition.module.scss';
+import classes from './CompositionSetup.module.scss';
 import { AddAgentButton } from './AddAgentButton';
-import { useComposition } from '../contexts';
-import { CompositionAgent } from './CompositionAgent';
+import { useCompose } from '../contexts';
+import { CompositionItem } from './CompositionItem';
 import { Container } from '#components/layouts/Container.tsx';
+import { VersionTag } from '#components/VersionTag/VersionTag.tsx';
 
-export function Composition() {
-  const { agents } = useComposition();
+export function CompositionSetup() {
+  const { agents } = useCompose();
 
   return (
     <div className={classes.root}>
       <Container>
-        <h1>Compose</h1>
+        <h1>
+          Compose playground <VersionTag>alpha</VersionTag>
+        </h1>
 
         <div className={classes.agents}>
           {agents.map((agent, order) => (
-            <CompositionAgent agent={agent} key={`${order}${agent.name}`} />
+            <CompositionItem agent={agent} key={`${order}${agent.data.name}`} />
           ))}
 
           <AddAgentButton />

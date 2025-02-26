@@ -15,20 +15,25 @@
  */
 
 import { Agent } from '#modules/agents/api/types.ts';
-import { getAgentTitle } from '#modules/agents/utils.ts';
-import { MarkdownContent } from '#components/MarkdownContent/MarkdownContent.tsx';
-import classes from './CompositionAgent.module.scss';
+import { createContext } from 'react';
 
-interface Props {
-  agent: Agent;
+export const ComposeContext = createContext<ComposeContextValue | null>(null);
+
+interface ComposeContextValue {
+  agents: AgentInstance[];
+  result?: string;
+  onSubmit: (input: string) => Promise<void>;
+  onCancel: () => void;
+  onClear: () => void;
+  setAgents: (updater: (agent: AgentInstance[]) => AgentInstance[]) => void;
 }
-export function CompositionAgent({ agent }: Props) {
-  const { description } = agent;
 
-  return (
-    <div className={classes.root}>
-      <span className={classes.name}>{getAgentTitle(agent)}</span>
-      {description && <MarkdownContent className={classes.description}>{description}</MarkdownContent>}
-    </div>
-  );
+export interface AgentInstance {
+  data: Agent;
+  isPending?: boolean;
+  logs?: string[];
+  stats?: {
+    startTime: number;
+    endTime?: number;
+  };
 }

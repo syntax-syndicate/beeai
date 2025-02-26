@@ -49,7 +49,7 @@ const NAV_ITEMS = [
     section: sections.agents,
   },
   {
-    label: 'Compose',
+    label: 'Compose playground',
     to: routes.compose(),
     section: sections.compose,
   },

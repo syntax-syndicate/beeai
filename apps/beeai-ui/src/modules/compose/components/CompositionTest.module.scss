@@ -18,12 +18,17 @@
   display: flex;
   flex-direction: column;
   background-color: $background;
-  padding-block: $spacing-05;
+  padding-block-start: $spacing-05;
+  padding-block-end: 0;
+  overflow: hidden;
 
   > div {
     margin-inline: 0;
     padding-inline-end: $spacing-06;
     padding-inline-start: $spacing-07;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: max-content 1fr;
   }
 
   h2 {
@@ -61,4 +66,10 @@
     font-size: rem(18px);
     line-height: math.div(20, 18);
   }
+}
+
+.result {
+  @include scrollbar();
+  overflow-y: auto;
+  padding-block-end: $spacing-09;
 }

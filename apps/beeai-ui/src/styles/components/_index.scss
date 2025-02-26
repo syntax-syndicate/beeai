@@ -50,6 +50,7 @@
 // @forward '@carbon/styles/scss/components/form';
 // @forward '@carbon/styles/scss/components/icon-indicator';
 @forward '@carbon/styles/scss/components/inline-loading';
+@forward 'inline-loading';
 // @forward '@carbon/styles/scss/components/link';
 @forward '@carbon/styles/scss/components/list';
 // @forward '@carbon/styles/scss/components/list-box';
@@ -65,8 +66,9 @@
 // @forward '@carbon/styles/scss/components/pagination';
 // @forward '@carbon/styles/scss/components/pagination-nav';
 // @forward '@carbon/styles/scss/components/popover';
-// @forward '@carbon/styles/scss/components/progress-bar';
-// @forward '@carbon/styles/scss/components/progress-indicator';
+@forward '@carbon/styles/scss/components/progress-bar';
+@forward '@carbon/styles/scss/components/progress-indicator';
+@forward 'progress-bar';
 // @forward '@carbon/styles/scss/components/radio-button';
 @forward '@carbon/styles/scss/components/search';
 // @forward '@carbon/styles/scss/components/select';

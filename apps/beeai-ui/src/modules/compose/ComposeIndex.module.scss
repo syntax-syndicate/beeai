@@ -16,6 +16,11 @@
 
 .main {
   background-color: $layer-02;
+  overflow: hidden;
+
+  > div > div {
+    overflow: hidden;
+  }
 }
 
 .splitContainer {
@@ -24,8 +29,6 @@
   inline-size: 100%;
 
   > div {
-    padding-block: $spacing-09;
-    @include scrollbar();
-    overflow-y: auto;
+    padding-block-start: $spacing-09;
   }
 }

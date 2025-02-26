@@ -16,14 +16,14 @@
 
 import { AgentsProvider } from '#modules/agents/contexts/AgentsProvider.tsx';
 import { ComposeIndex } from '#modules/compose/ComposeIndex.tsx';
-import { CompositionProvider } from '#modules/compose/contexts/CompositionProvider.tsx';
+import { ComposeProvider } from '#modules/compose/contexts/ComposeProvider.tsx';
 
 export function ComposePage() {
   return (
     <AgentsProvider>
-      <CompositionProvider>
+      <ComposeProvider>
         <ComposeIndex />
-      </CompositionProvider>
+      </ComposeProvider>
     </AgentsProvider>
   );
 }

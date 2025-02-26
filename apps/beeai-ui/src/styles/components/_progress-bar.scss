@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-.root {
-  background-color: $layer-02;
-  display: flex;
-  justify-content: flex-end;
+@use 'styles/common' as *;
 
-  > div {
-    margin-inline: 0;
-    padding-inline-end: $spacing-06;
-  }
+.cds--progress-bar__bar {
+  background-color: $background-inverse;
 }
 
-.agents {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-06;
+.cds--progress-bar--small {
+  .cds--progress-bar__track {
+    block-size: rem(2px);
+  }
 }

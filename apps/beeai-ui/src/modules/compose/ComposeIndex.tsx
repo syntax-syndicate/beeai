@@ -17,10 +17,9 @@
 import { useSearchParams } from 'react-router';
 import { MainContent } from '#components/layouts/MainContent.tsx';
 import { Container } from '#components/layouts/Container.tsx';
-import { ViewStack } from '#components/ViewStack/ViewStack.tsx';
 import { AgentsProvider } from '#modules/agents/contexts/AgentsProvider.tsx';
 import classes from './ComposeIndex.module.scss';
-import { Composition } from './components/Composition';
+import { CompositionSetup } from './components/CompositionSetup';
 import { CompositionTest } from './components/CompositionTest';
 
 export function ComposeIndex() {
@@ -28,17 +27,15 @@ export function ComposeIndex() {
 
   return searchParams.get('agents') ? (
     <div className={classes.splitContainer}>
-      <Composition />
+      <CompositionSetup />
       <CompositionTest />
     </div>
   ) : (
     <MainContent className={classes.main}>
       <Container>
-        <ViewStack>
-          <AgentsProvider>
-            <Composition />
-          </AgentsProvider>
-        </ViewStack>
+        <AgentsProvider>
+          <CompositionSetup />
+        </AgentsProvider>
       </Container>
     </MainContent>
   );
