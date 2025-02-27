@@ -24,11 +24,16 @@ interface Props<
     method: ZodLiteral<string>;
   }>,
 > {
-  agent: Agent;
   notifications?: {
     schema: NotificationsSchema;
     handler: (notification: z.infer<NotificationsSchema>) => void | Promise<void>;
   };
+}
+
+interface RunMutationProps<Input extends { [x: string]: unknown }> {
+  agent: Agent;
+  input: Input;
+  abortController?: AbortController;
 }
 
 export function useRunAgent<
@@ -36,11 +41,11 @@ export function useRunAgent<
   NotificationsSchema extends ZodObject<{
     method: ZodLiteral<string>;
   }>,
->({ agent, notifications }: Props<NotificationsSchema>) {
+>({ notifications }: Props<NotificationsSchema>) {
   const createClient = useCreateMCPClient();
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: async ({ input, abortController }: { input: Input; abortController?: AbortController }) => {
+    mutationFn: async ({ agent, input, abortController }: RunMutationProps<Input>) => {
       const client = await createClient();
       if (!client) throw new Error('Connecting to MCP server failed.');
 

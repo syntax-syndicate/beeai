@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-import { ComposeIndex } from '#modules/compose/ComposeIndex.tsx';
-import { ComposeProvider } from '#modules/compose/contexts/ComposeProvider.tsx';
+import { Agent } from '#modules/agents/api/types.ts';
+import { SEQUENTIAL_COMPOSE_AGENT_NAME } from './contexts/compose-context';
 
-export function ComposePage() {
-  return (
-    <ComposeProvider>
-      <ComposeIndex />
-    </ComposeProvider>
-  );
+export function getSequentialComposeAgent(agents?: Agent[]) {
+  console.log({ agents });
+
+  return agents?.find(({ name }) => name === SEQUENTIAL_COMPOSE_AGENT_NAME);
 }

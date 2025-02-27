@@ -16,7 +16,6 @@
 
 import { Button } from '@carbon/react';
 import classes from './AddAgentButton.module.scss';
-import { useAgents } from '#modules/agents/contexts/index.ts';
 import { RefObject, useId, useMemo, useRef, useState } from 'react';
 import { AgentListOption } from './AgentListOption';
 import { useOnClickOutside } from 'usehooks-ts';
@@ -25,6 +24,7 @@ import { messageInputSchema } from '@i-am-bee/beeai-sdk/schemas/message';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { promptInputSchema, promptOutputSchema } from '@i-am-bee/beeai-sdk/schemas/prompt';
 import { ExtendedJSONSchema } from 'json-schema-to-ts';
+import { useListAgents } from '#modules/agents/api/queries/useListAgents.ts';
 
 export function AddAgentButton() {
   const id = useId();
@@ -36,9 +36,7 @@ export function AddAgentButton() {
   });
 
   const { setAgents } = useCompose();
-  const {
-    agentsQuery: { data, isPending },
-  } = useAgents();
+  const { data, isPending } = useListAgents();
 
   const availableAgents = useMemo(
     () =>

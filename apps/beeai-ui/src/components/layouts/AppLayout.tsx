@@ -20,6 +20,7 @@ import { Outlet, useLocation } from 'react-router';
 import { AppFooter } from './AppFooter';
 import { AppHeader } from './AppHeader';
 import classes from './AppLayout.module.scss';
+import { MainNav } from '#components/MainNav/MainNav.tsx';
 
 export function AppLayout() {
   const { pathname } = useLocation();

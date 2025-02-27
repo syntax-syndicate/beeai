@@ -46,7 +46,6 @@ export function ChatProvider({ agent, children }: PropsWithChildren<Props>) {
   );
 
   const { runAgent, isPending } = useRunAgent<MessageInput, MessagesNotifications>({
-    agent,
     notifications: {
       schema: messagesNotificationsSchema,
       handler: (notification) => {
@@ -85,6 +84,7 @@ export function ChatProvider({ agent, children }: PropsWithChildren<Props>) {
         abortControllerRef.current = abortController;
 
         const response = (await runAgent({
+          agent,
           input: {
             messages: getInputMessages(),
           },
@@ -104,7 +104,7 @@ export function ChatProvider({ agent, children }: PropsWithChildren<Props>) {
         });
       }
     },
-    [getInputMessages, runAgent, setMessages, updateLastAgentMessage],
+    [agent, getInputMessages, runAgent, setMessages, updateLastAgentMessage],
   );
 
   const handleCancel = useCallback(() => {

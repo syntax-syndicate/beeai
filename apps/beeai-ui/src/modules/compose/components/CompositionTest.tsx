@@ -26,7 +26,7 @@ import { MarkdownContent } from '#components/MarkdownContent/MarkdownContent.tsx
 import { Container } from '#components/layouts/Container.tsx';
 
 export function CompositionTest() {
-  const { result, onSubmit, onCancel, onClear } = useCompose();
+  const { result, onSubmit, onCancel, onReset } = useCompose();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export function CompositionTest() {
               Input: <strong>{input}</strong>
             </h2>
             <div>
-              <Button renderIcon={NewTab} size="md" kind="tertiary" onClick={() => onClear()}>
+              <Button renderIcon={NewTab} size="md" kind="tertiary" onClick={() => onReset()}>
                 New test
               </Button>
             </div>

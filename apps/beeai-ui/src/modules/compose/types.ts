@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-import { ComposeIndex } from '#modules/compose/ComposeIndex.tsx';
-import { ComposeProvider } from '#modules/compose/contexts/ComposeProvider.tsx';
+import { AgentRunProgressNotificationSchema } from '@i-am-bee/acp-sdk/types.js';
+import { outputSchema } from '@i-am-bee/beeai-sdk/schemas/base';
+import { PromptInput } from '@i-am-bee/beeai-sdk/schemas/prompt';
+import { z } from 'zod';
 
-export function ComposePage() {
-  return (
-    <ComposeProvider>
-      <ComposeIndex />
-    </ComposeProvider>
-  );
-}
+export const composeNotificationSchema = AgentRunProgressNotificationSchema.extend({
+  params: z.object({
+    delta: outputSchema,
+  }),
+});
+export type ComposeNotifications = typeof composeNotificationSchema;
+
+export type ComposeInput = {
+  input: PromptInput;
+  agents: string[];
+};

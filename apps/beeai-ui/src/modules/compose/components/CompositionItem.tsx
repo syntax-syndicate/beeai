@@ -36,8 +36,8 @@ export function CompositionItem({ agent: agentInstance }: Props) {
         <div className={classes.output}>
           {logs && (
             <div className={classes.logs}>
-              {logs.map((log) => (
-                <div>{log}</div>
+              {logs.map((log, order) => (
+                <div key={order}>{log}</div>
               ))}
             </div>
           )}

@@ -25,6 +25,7 @@ interface ComposeContextValue {
   onSubmit: (input: string) => Promise<void>;
   onCancel: () => void;
   onClear: () => void;
+  onReset: () => void;
   setAgents: (updater: (agent: AgentInstance[]) => AgentInstance[]) => void;
 }
 
@@ -37,3 +38,5 @@ export interface AgentInstance {
     endTime?: number;
   };
 }
+
+export const SEQUENTIAL_COMPOSE_AGENT_NAME = 'sequential-workflow';

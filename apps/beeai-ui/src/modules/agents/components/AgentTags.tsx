@@ -42,7 +42,7 @@ export function AgentTags({ agent, className, size = 'md' }: Props) {
   );
 }
 
-function AgentTag({ name }: { name: string }) {
+function AgentTag({ name, size }: { name: string; size: TagSize }) {
   return name === BEE_AI_FRAMEWORK_TAG ? (
     <Tooltip content="Built by the BeeAI team" placement="top" asChild>
       <Tag type="green" renderIcon={Bee}>

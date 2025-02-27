@@ -15,28 +15,41 @@
  */
 
 import { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AgentInstance, ComposeContext } from './compose-context';
+import { AgentInstance, ComposeContext, SEQUENTIAL_COMPOSE_AGENT_NAME } from './compose-context';
 import { useSearchParams } from 'react-router';
-import { useAgents } from '#modules/agents/contexts/index.ts';
 import { useRunAgent } from '#modules/run/api/mutations/useRunAgent.tsx';
-import { PromptInput } from '@i-am-bee/beeai-sdk/schemas/prompt';
-import { PromptNotifications, promptNotificationsSchema, PromptResult } from '#modules/run/api/types.ts';
+import { PromptResult } from '#modules/run/api/types.ts';
+import { useListAgents } from '#modules/agents/api/queries/useListAgents.ts';
+import { isNotNull } from '#utils/helpers.ts';
+import { getSequentialComposeAgent } from '../utils';
+import { useHandleError } from '#hooks/useHandleError.ts';
+import { ComposeInput, ComposeNotifications, composeNotificationSchema } from '../types';
 
 export function ComposeProvider({ children }: PropsWithChildren) {
-  const {
-    agentsQuery: { data },
-  } = useAgents();
+  const { data } = useListAgents();
   const [agents, setAgents] = useState<AgentInstance[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [result, setResult] = useState<string>();
   const abortControllerRef = useRef<AbortController | null>(null);
+  const handleError = useHandleError();
+
+  console.log(agents);
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || agents.length) return;
 
     const agentNames = searchParams.get(URL_PARAM_AGENTS)?.split(',');
-    setAgents(data.filter(({ name }) => agentNames?.includes(name)).map((agent) => ({ data: agent })));
-  }, [data, searchParams]);
+    if (agentNames) {
+      setAgents(
+        agentNames
+          .map((name) => {
+            const agent = data.find((agent) => name === agent.name);
+            return agent ? { data: agent } : null;
+          })
+          .filter(isNotNull),
+      );
+    }
+  }, [agents, data, searchParams]);
 
   const updateAgents = useCallback(
     (updater: (agent: AgentInstance[]) => AgentInstance[]) => {
@@ -54,15 +67,11 @@ export function ComposeProvider({ children }: PropsWithChildren) {
     [setSearchParams],
   );
 
-  // TODO: replace with compose agent
-  const agent = useMemo(() => agents.at(0)?.data, [agents]);
-
-  const { runAgent } = useRunAgent<PromptInput, PromptNotifications>({
-    agent: agent!,
+  const { runAgent } = useRunAgent<ComposeInput, ComposeNotifications>({
     notifications: {
-      schema: promptNotificationsSchema,
+      schema: composeNotificationSchema,
       handler: (notification) => {
-        setResult((result) => result + notification.params.delta.text);
+        console.log({ notification, logs: notification.params.delta.logs });
       },
     },
   });
@@ -74,6 +83,9 @@ export function ComposeProvider({ children }: PropsWithChildren) {
         abortControllerRef.current = abortController;
 
         setResult('');
+
+        const composeAgent = getSequentialComposeAgent(data);
+        if (!composeAgent) throw Error(`'${SEQUENTIAL_COMPOSE_AGENT_NAME}' agent is not available.`);
 
         setAgents((agents) =>
           agents.map((instance) => ({
@@ -87,13 +99,15 @@ export function ComposeProvider({ children }: PropsWithChildren) {
         );
 
         const response = (await runAgent({
-          input: { prompt: input },
+          agent: composeAgent,
+          input: { input: { text: input }, agents: agents.map(({ data }) => data.name) },
           abortController,
         })) as PromptResult;
 
         setResult(response.output.text);
       } catch (error) {
         console.error(error);
+        handleError(error, { errorToast: { title: 'Run failed', includeErrorMessage: true } });
       } finally {
         setAgents((agents) =>
           agents.map((instance) => {
@@ -106,14 +120,14 @@ export function ComposeProvider({ children }: PropsWithChildren) {
         );
       }
     },
-    [runAgent],
+    [agents, data, handleError, runAgent],
   );
 
   const handleCancel = useCallback(() => {
     abortControllerRef.current?.abort();
   }, []);
 
-  const handleClear = useCallback(() => {
+  const handleReset = useCallback(() => {
     setResult('');
     setAgents((agents) =>
       agents.map((instance) => ({
@@ -126,8 +140,16 @@ export function ComposeProvider({ children }: PropsWithChildren) {
   }, []);
 
   const value = useMemo(
-    () => ({ agents, result, setAgents: updateAgents, onSubmit: send, onCancel: handleCancel, onClear: handleClear }),
-    [agents, handleCancel, handleClear, result, send, updateAgents],
+    () => ({
+      agents,
+      result,
+      setAgents: updateAgents,
+      onSubmit: send,
+      onCancel: handleCancel,
+      onClear: () => setAgents([]),
+      onReset: handleReset,
+    }),
+    [agents, handleCancel, handleReset, result, send, updateAgents],
   );
 
   return <ComposeContext.Provider value={value}>{children}</ComposeContext.Provider>;
