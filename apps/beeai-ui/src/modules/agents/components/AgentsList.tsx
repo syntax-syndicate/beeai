@@ -15,23 +15,18 @@
  */
 
 import { ErrorMessage } from '#components/ErrorMessage/ErrorMessage.tsx';
-import { useModal } from '#contexts/Modal/index.tsx';
-import { ImportAgentsModal } from '#modules/agents/components/ImportAgentsModal.tsx';
-import { Add } from '@carbon/icons-react';
-import { Button } from '@carbon/react';
+import { SkeletonText } from '@carbon/react';
 import pluralize from 'pluralize';
 import { useFormContext } from 'react-hook-form';
-import { useAgents } from '../contexts';
-import { AgentsFiltersParams } from '../contexts/agents-context';
+import { useListAgents } from '../api/queries/useListAgents';
 import { useFilteredAgents } from '../hooks/useFilteredAgents';
+import { AgentsFiltersParams } from '../providers/AgentsFiltersProvider';
 import { AgentCard } from './AgentCard';
 import classes from './AgentsList.module.scss';
+import { ImportAgents } from './ImportAgents';
 
 export function AgentsList() {
-  const { openModal } = useModal();
-  const {
-    agentsQuery: { data, isPending, error, refetch, isRefetching },
-  } = useAgents();
+  const { data, isPending, error, refetch, isRefetching } = useListAgents();
   const { watch } = useFormContext<AgentsFiltersParams>();
   const filters = watch();
 
@@ -51,21 +46,18 @@ export function AgentsList() {
   return (
     <div>
       <div className={classes.header}>
-        {totalCount > 0 && (
-          <p className={classes.count}>
-            Showing {totalCount === filteredCount ? totalCount : `${filteredCount} of ${totalCount}`}{' '}
-            {pluralize('agent', totalCount)}
-          </p>
+        {!isPending ? (
+          totalCount > 0 && (
+            <p className={classes.count}>
+              Showing {totalCount === filteredCount ? totalCount : `${filteredCount} of ${totalCount}`}{' '}
+              {pluralize('agent', totalCount)}
+            </p>
+          )
+        ) : (
+          <SkeletonText className={classes.count} width="125px" />
         )}
 
-        <Button
-          kind="tertiary"
-          size="md"
-          renderIcon={Add}
-          onClick={() => openModal((props) => <ImportAgentsModal {...props} />)}
-        >
-          Import agents
-        </Button>
+        <ImportAgents />
       </div>
 
       <ul className={classes.list}>

@@ -9,18 +9,19 @@ import { CHAT_MODEL } from "../config.js";
 import { ChatModel } from "beeai-framework/backend/chat";
 
 const inputSchema = promptInputSchema;
-type Input = z.infer<typeof inputSchema>;
+type Input = z.output<typeof inputSchema>;
 const outputSchema = promptOutputSchema;
+type Output = z.output<typeof outputSchema>;
 
 const run = async (
   {
     params,
   }: {
-    params: { input: z.infer<typeof inputSchema> };
+    params: { input: Input };
   },
-  { signal }: { signal?: AbortSignal }
-) => {
-  const { prompt } = params.input;
+  { signal }: { signal?: AbortSignal },
+): Promise<Output> => {
+  const { text } = params.input;
 
   const model = await ChatModel.fromName(CHAT_MODEL);
 
@@ -50,7 +51,7 @@ ALWAYS START YOUR RESPONSE DIRECTLY WITH SPEAKER 1:
 DO NOT GIVE EPISODE TITLES SEPARATELY, LET SPEAKER 1 TITLE IT IN HER SPEECH
 DO NOT GIVE CHAPTER TITLES
 IT SHOULD STRICTLY BE THE DIALOGUES`),
-      new UserMessage(prompt),
+      new UserMessage(text),
     ],
     maxTokens: 8126,
     temperature: 1,
@@ -63,7 +64,7 @@ IT SHOULD STRICTLY BE THE DIALOGUES`),
     z.object({
       speaker: z.number().min(1).max(2),
       text: z.string(),
-    })
+    }),
   );
 
   // Dramatise podcast
@@ -118,14 +119,13 @@ Example of response:
     abortSignal: signal,
   });
 
-  return {
+  return outputSchema.parse({
     text: JSON.stringify(finalReponse.object),
-  };
+  });
 };
 
 const exampleInput: Input = {
-  prompt:
-    "Artificial intelligence is revolutionizing industries by automating complex tasks, improving efficiency, and enabling data-driven decision-making. In healthcare, AI is helping doctors diagnose diseases earlier and personalize treatments...",
+  text: "Artificial intelligence is revolutionizing industries by automating complex tasks, improving efficiency, and enabling data-driven decision-making. In healthcare, AI is helping doctors diagnose diseases earlier and personalize treatments...",
 };
 
 const exampleOutput = `[
@@ -144,7 +144,7 @@ export const agent = {
   outputSchema,
   run,
   metadata: {
-    fullDescription: `The \`podcast-creator\' converts structured content into a dynamic, natural-sounding podcast script optimized for AI-driven text-to-speech (TTS) applications. It processes input text and transforms it into a structured dialogue between two speakers: one acting as a knowledgeable host and the other as an inquisitive co-host, ensuring a conversational and engaging discussion. The generated dialogue includes interruptions, follow-up questions, and natural reactions to enhance realism.
+    fullDescription: `The \`podcast-creator\' agent converts structured content into a dynamic, natural-sounding podcast script optimized for AI-driven text-to-speech (TTS) applications. It processes input text and transforms it into a structured dialogue between two speakers: one acting as a knowledgeable host and the other as an inquisitive co-host, ensuring a conversational and engaging discussion. The generated dialogue includes interruptions, follow-up questions, and natural reactions to enhance realism.
     
 ## How It Works
 The agent takes an input content document (e.g., an article, research paper, or structured text) and reformats it into a back-and-forth podcast-style discussion. The output maintains a logical flow, with Speaker 1 explaining concepts while Speaker 2 asks relevant questions, reacts, and occasionally introduces tangents for a more natural feel. The generated script is optimized for AI text-to-speech pipelines, ensuring clarity and proper role differentiation.
@@ -175,23 +175,23 @@ The agent returns a structured JSON list representing the podcast conversation:
 
 ### Example 1: Converting an Article into a Podcast
 
-### Input:
+#### Input:
 \`\`\`json
 ${JSON.stringify(exampleInput, null, 2)}
 \`\`\`
 
-### CLI:
+#### CLI:
 \`\`\`bash
 beeai run podcast-creator '${JSON.stringify(exampleInput, null, 2)}'
 \`\`\`
 
-### Processing Steps:\
+#### Processing Steps:
 
 1. Extracts key concepts from the content.
 2. Reformats it into a structured conversation where Speaker 1 explains ideas and Speaker 2 reacts, asks questions, and introduces clarifications.
 3. Dramatises the content and outputs a structured dialogue suitable for AI voice synthesis.
 
-### Output:
+#### Output:
 
 \`\`\`json
 ${exampleOutput}

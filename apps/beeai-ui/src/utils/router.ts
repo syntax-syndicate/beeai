@@ -21,6 +21,7 @@ export const routeDefinitions = {
   agentRun: () => `/${sections.agents}/run/:agentName` as const,
   agentDetail: () => `/${sections.agents}/:agentName` as const,
   compose: () => `/${sections.compose}` as const,
+  settings: () => '/settings' as const,
 };
 
 export const routes = {

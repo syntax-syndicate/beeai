@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-import { api } from '#api/index.ts';
-import { CreateProviderBody } from './types';
+import { PropsWithChildren } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
-export async function createProvider(body: CreateProviderBody) {
-  const response = await api.post('provider', { json: body });
+export interface AgentsFiltersParams {
+  search?: string;
+  framework?: string | null;
+}
 
-  if (!response.ok) {
-    throw new Error('Failed to post data');
-  }
+export function AgentsFiltersProvider({ children }: PropsWithChildren) {
+  const formReturn = useForm<AgentsFiltersParams>({
+    mode: 'onChange',
+  });
 
-  return response.json(); // Return the response JSON
+  return <FormProvider {...formReturn}>{children}</FormProvider>;
 }

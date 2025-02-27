@@ -15,7 +15,9 @@
  */
 
 import { TagsList } from '#components/TagsList/TagsList.tsx';
+import { Tooltip } from '#components/Tooltip/Tooltip.tsx';
 import Bee from '#svgs/Bee.svg';
+import { BEE_AI_FRAMEWORK_TAG } from '#utils/constants.ts';
 import { isNotNull } from '#utils/helpers.ts';
 import { Tag } from '@carbon/react';
 import { Agent } from '../api/types';
@@ -40,11 +42,13 @@ export function AgentTags({ agent, className, size = 'md' }: Props) {
   );
 }
 
-function AgentTag({ name, size }: { name: string; size?: TagSize }) {
-  return name === 'BeeAI' ? (
-    <Tag type="green" renderIcon={Bee} size={size}>
-      {name}
-    </Tag>
+function AgentTag({ name }: { name: string }) {
+  return name === BEE_AI_FRAMEWORK_TAG ? (
+    <Tooltip content="Built by the BeeAI team" placement="top" asChild>
+      <Tag type="green" renderIcon={Bee}>
+        {name}
+      </Tag>
+    </Tooltip>
   ) : (
     <Tag type="cool-gray" size={size}>
       {name}

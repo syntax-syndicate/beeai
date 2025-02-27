@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-import { createContext } from 'react';
-import { useListAgents } from '../api/queries/useListAgents';
+import { useQuery } from '@tanstack/react-query';
+import { getProviders } from '..';
+import { providerKeys } from '../keys';
 
-export const AgentsContext = createContext<AgentsContextValue | null>(null);
-
-interface AgentsContextValue {
-  agentsQuery: ReturnType<typeof useListAgents>;
+interface Props {
+  id?: string;
 }
 
-export interface AgentsFiltersParams {
-  search?: string;
-  framework?: string | null;
+export function useProvider({ id }: Props) {
+  const query = useQuery({
+    queryKey: providerKeys.list(),
+    queryFn: () => getProviders(),
+    select: (data) => data?.items.find((item) => id === item.id),
+    enabled: Boolean(id),
+  });
+
+  return query;
 }
