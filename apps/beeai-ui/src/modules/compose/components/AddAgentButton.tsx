@@ -22,6 +22,9 @@ import { AgentListOption } from './AgentListOption';
 import { useOnClickOutside } from 'usehooks-ts';
 import { useCompose } from '../contexts';
 import { messageInputSchema } from '@i-am-bee/beeai-sdk/schemas/message';
+import { zodToJsonSchema } from 'zod-to-json-schema';
+import { promptInputSchema, promptOutputSchema } from '@i-am-bee/beeai-sdk/schemas/prompt';
+import { ExtendedJSONSchema } from 'json-schema-to-ts';
 
 export function AddAgentButton() {
   const id = useId();
@@ -37,20 +40,17 @@ export function AddAgentButton() {
     agentsQuery: { data, isPending },
   } = useAgents();
 
-  const availableAgents = useMemo(() => {
-    console.log({ data });
-
-    data?.forEach((agent) => {
-      try {
-        messageInputSchema.parse(agent.inputSchema);
-        console.log(`${agent.name} implements messageInputSchema`);
-      } catch (error) {
-        console.error(error);
-      }
-    });
-
-    return data;
-  }, [data]);
+  const availableAgents = useMemo(
+    () =>
+      data?.filter(
+        (agent) =>
+          (validateSchema(agent.inputSchema as JSONSchema, messageInputJsonSchema as JSONSchema) &&
+            validateSchema(agent.outputSchema as JSONSchema, messageOutputJsonSchema as JSONSchema)) ||
+          (validateSchema(agent.inputSchema as JSONSchema, promptInputJsonSchema as JSONSchema) &&
+            validateSchema(agent.outputSchema as JSONSchema, promptOutputJsonSchema as JSONSchema)),
+      ),
+    [data],
+  );
 
   return (
     <div className={classes.root} ref={selectorRef}>
@@ -76,14 +76,47 @@ export function AddAgentButton() {
                 }}
               />
             ))
-          : Array.from({ length: AGENTS_SKELETON_COUNT }, (_, idx) => (
-              <li key={idx}>
-                <AgentListOption.Skeleton />
-              </li>
-            ))}
+          : Array.from({ length: AGENTS_SKELETON_COUNT }, (_, idx) => <AgentListOption.Skeleton key={idx} />)}
       </ul>
     </div>
   );
 }
 
 const AGENTS_SKELETON_COUNT = 4;
+
+const messageInputJsonSchema = zodToJsonSchema(messageInputSchema);
+const messageOutputJsonSchema = zodToJsonSchema(messageInputSchema);
+const promptInputJsonSchema = zodToJsonSchema(promptInputSchema);
+const promptOutputJsonSchema = zodToJsonSchema(promptOutputSchema);
+
+type JSONSchema = Exclude<ExtendedJSONSchema, boolean>;
+
+function validateSchema(schema: JSONSchema, targetSchema: JSONSchema): boolean {
+  if (!schema.required || !targetSchema.required || !targetSchema.properties || !schema.properties) {
+    return false;
+  }
+
+  const missingRequired = targetSchema.required.some((key: string) => !schema.required?.includes(key));
+  if (missingRequired) return false;
+
+  targetSchema.required?.forEach((key) => {
+    const targetValue = targetSchema.properties?.[key];
+    const value = schema.properties?.[key];
+
+    if (!value || !targetValue || typeof targetValue === 'boolean' || typeof value === 'boolean') {
+      return false;
+    }
+
+    if (targetValue.type === 'object') {
+      if (!validateSchema(targetValue, schema)) {
+        return false;
+      }
+    } else {
+      if (value.type !== targetValue.type) {
+        return false;
+      }
+    }
+  });
+
+  return true;
+}

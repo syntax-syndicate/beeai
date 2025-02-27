@@ -35,19 +35,21 @@
   margin-block-end: $spacing-03;
 }
 
-.progress {
+.output {
+  border-block-start: 1px solid $border-subtle;
   margin-block-start: $spacing-04;
-
-  :global(.cds--progress-bar__label) {
-    display: none;
-  }
 }
 
 .logs {
+  @include scrollbar();
   display: flex;
   flex-direction: column;
   gap: $spacing-03;
   margin-block-start: $spacing-05;
+  margin-block-end: $spacing-03;
+  border-block-end: 1px solid $border-subtle;
+  padding-block-end: $spacing-04;
+  overflow: auto;
 
   > div {
     font-size: rem(12px);

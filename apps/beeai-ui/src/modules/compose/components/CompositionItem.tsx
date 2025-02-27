@@ -1,8 +1,24 @@
+/**
+ * Copyright 2025 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { getAgentTitle } from '#modules/agents/utils.ts';
 import { MarkdownContent } from '#components/MarkdownContent/MarkdownContent.tsx';
 import classes from './CompositionItem.module.scss';
 import { AgentInstance } from '../contexts/compose-context';
-import { InlineLoading, Layer, ProgressBar } from '@carbon/react';
+import { InlineLoading } from '@carbon/react';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -17,21 +33,23 @@ export function CompositionItem({ agent: agentInstance }: Props) {
       <span className={classes.name}>{getAgentTitle(data)}</span>
       {description && <MarkdownContent className={classes.description}>{description}</MarkdownContent>}
       {(isPending || stats) && (
-        <>
-          <Layer level={2}>
-            <ProgressBar status="active" label="" className={classes.progress} value={33} size="small" />
-          </Layer>
-
-          <div className={classes.logs}>{logs?.map((log) => <div>{log}</div>)}</div>
+        <div className={classes.output}>
+          {logs && (
+            <div className={classes.logs}>
+              {logs.map((log) => (
+                <div>{log}</div>
+              ))}
+            </div>
+          )}
 
           <div className={classes.status}>
-            <div></div>
+            <div>Output:</div>
             <div className={classes.loading}>
               <ElapsedTime stats={stats} />
               <InlineLoading status={isPending ? 'active' : 'finished'} />
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

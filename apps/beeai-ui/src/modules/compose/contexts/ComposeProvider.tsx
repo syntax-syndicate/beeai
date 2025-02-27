@@ -54,7 +54,7 @@ export function ComposeProvider({ children }: PropsWithChildren) {
     [setSearchParams],
   );
 
-  // TODO: replace with composition agent
+  // TODO: replace with compose agent
   const agent = useMemo(() => agents.at(0)?.data, [agents]);
 
   const { runAgent } = useRunAgent<PromptInput, PromptNotifications>({

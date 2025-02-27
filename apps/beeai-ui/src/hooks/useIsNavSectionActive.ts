@@ -22,7 +22,5 @@ export function useIsNavSectionActive() {
   const { pathname } = useLocation();
   const section = pathname.split('/').at(1);
 
-  console.log({ section });
-
   return useCallback((name: NavSectionName) => name === section, [section]);
 }
