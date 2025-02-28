@@ -5,9 +5,9 @@ import {
 } from "@i-am-bee/beeai-sdk/schemas/prompt";
 import { z } from "zod";
 import { PlatformSdk } from "./platform-sdk.js";
-import { CreateAgentConfig } from "beeai-supervisor/agents/registry/index.js";
-import { createBeeSupervisor } from "beeai-supervisor";
 import { AgentFactory } from "./agent-factory.js";
+import { createBeeSupervisor } from "@i-am-bee/beeai-supervisor";
+import { CreateAgentConfig } from "@i-am-bee/beeai-supervisor/agents/registry/registry.js";
 
 const inputSchema = promptInputSchema.extend({
   availableAgents: z.array(z.string()),
